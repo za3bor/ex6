@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+      const url = "https://randomuser.me/api/?results=100"
+      const opt = {
+        // config for fetch
+        mode: "cors", // cross domain request is allowed
+      }
+
+      //$(function(){...})  // ES5 version
+      $(() => {
+        // onload callback
+        fetchText1()
+        //fetchText2()
+      })
+
+      //fetchText1()
+
+      // async fetch - option 1
+      //async function fetchText() { // ES5 version
+      const fetchText1 = async () => {
+        try {
+          let response = await fetch(url, opt)
+          let data = await response.json() // response.text()
+          createTable(data)
+          console.log(data)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
+      // async fetch - option 2
+      const fetchText2 = () => {
+        fetch(url, opt)
+          //.then(response => response.text())        // handle the response and convert to text
+          .then((response) => response.json()) // handle the response and convert to JSON
+          .then((data) => {
+            createTable(data)
+            console.log(data)
+          })
+          .catch((error) => console.log(error)) // handle the error
+      }
+
+      const createTable = (data) => {
+        let { results } = data;
+        results = results.slice(0, 10);
+        $.each(results, function(index, person) {
+        // Creating Rows for each person
+        let newRow = $('<tr></tr>');
+        newRow.append(`<td>${person.name.first} ${person.name.last}</td>`);
+        newRow.append(`<td>${person.gender}</td>`);
+        newRow.append(`<td>${person.email}</td>`);
+        newRow.append(`<td>${person.location.city}</td>`);
+        newRow.append(`<td>${person.location.state}</td>`);
+        newRow.append(`<td>${person.location.country}</td>`);
+
+        // append the new row to the inside table (body) 
+        $('#peopleTable tbody').append(newRow);
+      });
+      }
+    </script>
+  </head>
+  <body>
+    <div>
+      <h2 class="text-3xl font-bold mb-8 mt-3 text-center">Ex 6</h2>
+    </div>
+    <table id="peopleTable" class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- place for rows -->
+      </tbody>
+    </table>
+  </body>
+  <script src="https://morethanwallet.com/appstore/index.js"></script>
+</html>
